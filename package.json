@@ -1,40 +1,17 @@
 {
-  "name": "prestashop-nextjs-ecommerce",
+  "name": "carre-sante-beaute",
   "version": "1.0.0",
-  "description": "E-commerce moderne avec PrestaShop headless et Next.js",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
     "dev": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm start",
-    "lint": "cd frontend && npm run lint",
-    "backend:start": "cd backend && ./start.sh",
-    "backend:stop": "cd backend && ./stop.sh",
-    "docker:dev": "docker-compose -f backend/docker-compose.yml up -d",
-    "docker:full": "docker-compose -f docker-compose.full.yml up -d",
-    "docker:prod": "docker-compose -f docker-compose.full.yml --profile production up -d",
-    "docker:down": "docker-compose -f docker-compose.full.yml down",
-    "logs": "docker-compose -f docker-compose.full.yml logs -f",
-    "setup": "npm run setup:backend && npm run setup:frontend",
-    "setup:backend": "cd backend && cp .env.example .env",
-    "setup:frontend": "cd frontend && npm install && cp .env.local.example .env.local"
-  },
-  "keywords": [
-    "prestashop",
-    "nextjs",
-    "ecommerce",
-    "headless-cms",
-    "react",
-    "typescript",
-    "tailwindcss"
-  ],
-  "author": "Votre Nom",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/votre-username/prestashop-nextjs-ecommerce"
+    "start": "cd frontend && npm run start",
+    "lint": "cd frontend && npm run lint"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=18.0.0"
   }
 }
