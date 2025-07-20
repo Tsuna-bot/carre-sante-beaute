@@ -1,0 +1,47 @@
+# Configuration API PrestaShop - Tests
+# Utiliser avec REST Client (VS Code) ou Postman
+
+### Variables
+@baseURL = http://localhost:8080/api
+@apiKey = YOUR_API_KEY_HERE
+
+### Test de connexion - Catégories
+GET {{baseURL}}/categories
+Authorization: Basic {{apiKey}}:
+Accept: application/json
+
+### Test de connexion - Produits
+GET {{baseURL}}/products
+Authorization: Basic {{apiKey}}:
+Accept: application/json
+
+### Récupérer une catégorie spécifique
+GET {{baseURL}}/categories/1
+Authorization: Basic {{apiKey}}:
+Accept: application/json
+
+### Récupérer un produit spécifique
+GET {{baseURL}}/products/1
+Authorization: Basic {{apiKey}}:
+Accept: application/json
+
+### Créer un produit (exemple)
+POST {{baseURL}}/products
+Authorization: Basic {{apiKey}}:
+Content-Type: application/xml
+
+<prestashop>
+<product>
+<name>
+<language id="1">Produit Test API</language>
+</name>
+<price>29.99</price>
+<active>1</active>
+<id_category_default>2</id_category_default>
+<categories>
+<category>
+<id>2</id>
+</category>
+</categories>
+</product>
+</prestashop>

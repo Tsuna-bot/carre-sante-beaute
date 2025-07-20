@@ -1,0 +1,13 @@
+# Fichiers d'environnement
+.env
+
+# Volumes Docker
+volumes/
+
+# Logs
+*.log
+
+# Fichiers temporaires
+*.tmp
+*.bak
+.DS_Store

@@ -1,0 +1,122 @@
+# Docker Compose pour le stack complet (Backend + Frontend)
+version: '3.8'
+
+services:
+  # Base de données MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: ecommerce_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-admin123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-prestashop}
+      MYSQL_USER: ${MYSQL_USER:-prestashop_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-prestashop_pass}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - ecommerce_network
+
+  # PrestaShop Backend
+  prestashop:
+    image: prestashop/prestashop:9.0-apache
+    container_name: ecommerce_prestashop
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      DB_SERVER: mysql
+      DB_NAME: ${MYSQL_DATABASE:-prestashop}
+      DB_USER: ${MYSQL_USER:-prestashop_user}
+      DB_PASSWD: ${MYSQL_PASSWORD:-prestashop_pass}
+      PS_DOMAIN: ${PRESTASHOP_DOMAIN:-localhost:8080}
+      PS_FOLDER_ADMIN: admin-dev
+      PS_FOLDER_INSTALL: install-dev
+      PS_COUNTRY: FR
+      PS_LANGUAGE: fr
+      PS_INSTALL_AUTO: 1
+      PS_ERASE_DB: 0
+      PS_ENABLE_SSL: 0
+      ADMIN_MAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWD: ${ADMIN_PASSWORD:-admin123}
+    volumes:
+      - prestashop_data:/var/www/html
+      - prestashop_modules:/var/www/html/modules
+      - prestashop_themes:/var/www/html/themes
+    ports:
+      - "8080:80"
+    networks:
+      - ecommerce_network
+
+  # Frontend Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_PRESTASHOP_URL: ${NEXT_PUBLIC_PRESTASHOP_URL:-http://localhost:8080}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api}
+        NEXT_PUBLIC_SITE_NAME: ${NEXT_PUBLIC_SITE_NAME:-Mon E-commerce}
+    container_name: ecommerce_frontend
+    restart: unless-stopped
+    depends_on:
+      - prestashop
+    environment:
+      - NEXT_PUBLIC_PRESTASHOP_URL=${NEXT_PUBLIC_PRESTASHOP_URL:-http://localhost:8080}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080/api}
+      - NEXT_PUBLIC_SITE_NAME=${NEXT_PUBLIC_SITE_NAME:-Mon E-commerce}
+    ports:
+      - "3000:3000"
+    networks:
+      - ecommerce_network
+
+  # phpMyAdmin (optionnel)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: ecommerce_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD:-admin123}
+    ports:
+      - "8081:80"
+    networks:
+      - ecommerce_network
+
+  # Reverse proxy Nginx (pour production)
+  nginx:
+    image: nginx:alpine
+    container_name: ecommerce_nginx
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - prestashop
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - ecommerce_network
+    profiles:
+      - production
+
+volumes:
+  mysql_data:
+    driver: local
+  prestashop_data:
+    driver: local
+  prestashop_modules:
+    driver: local
+  prestashop_themes:
+    driver: local
+
+networks:
+  ecommerce_network:
+    driver: bridge

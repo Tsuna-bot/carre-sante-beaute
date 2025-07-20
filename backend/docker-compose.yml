@@ -1,0 +1,76 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: prestashop_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - prestashop_network
+
+  prestashop:
+    image: prestashop/prestashop:9.0-apache
+    container_name: prestashop_app
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      DB_SERVER: mysql
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWD: ${MYSQL_PASSWORD}
+      PS_DOMAIN: localhost:8080
+      PS_FOLDER_ADMIN: admin-dev
+      PS_FOLDER_INSTALL: install-dev
+      PS_COUNTRY: FR
+      PS_LANGUAGE: fr
+      PS_INSTALL_AUTO: 1
+      PS_ERASE_DB: 0
+      PS_ENABLE_SSL: 0
+      ADMIN_MAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWD: ${ADMIN_PASSWORD}
+    volumes:
+      - prestashop_data:/var/www/html
+      - prestashop_modules:/var/www/html/modules
+      - prestashop_themes:/var/www/html/themes
+    ports:
+      - "8080:80"
+    networks:
+      - prestashop_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: prestashop_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "8081:80"
+    networks:
+      - prestashop_network
+
+volumes:
+  mysql_data:
+    driver: local
+  prestashop_data:
+    driver: local
+  prestashop_modules:
+    driver: local
+  prestashop_themes:
+    driver: local
+
+networks:
+  prestashop_network:
+    driver: bridge
