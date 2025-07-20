@@ -1,5 +1,15 @@
 # Guide de Déploiement - Carré Santé Beauté
 
+## Structure du Projet
+
+```
+Prestashop/
+├── frontend/          # Application Next.js
+├── backend/           # API Prestashop
+├── vercel.json        # Configuration Vercel
+└── docker-compose.yml # Configuration Docker
+```
+
 ## Options de Déploiement
 
 ### Option 1 : Vercel (Recommandé)
@@ -10,15 +20,15 @@
    npm install -g vercel
    ```
 
-2. **Déploiement :**
+2. **Déploiement depuis le root :**
 
    ```bash
-   cd frontend
    vercel
    ```
 
 3. **Configuration automatique :**
-   - Vercel détectera automatiquement que c'est un projet Next.js
+   - Vercel détectera automatiquement la configuration dans `vercel.json`
+   - Le build se fera dans le dossier `frontend/`
    - Le déploiement se fera automatiquement à chaque push sur GitHub
 
 ### Option 2 : Netlify
@@ -33,12 +43,12 @@
 2. **Déploiement via Netlify CLI :**
    ```bash
    npm install -g netlify-cli
-   netlify deploy --dir=.next --prod
+   netlify deploy --dir=frontend/.next --prod
    ```
 
 ### Option 3 : GitHub Pages
 
-1. **Configuration dans package.json :**
+1. **Configuration dans frontend/package.json :**
 
    ```json
    {
@@ -51,6 +61,7 @@
 
 2. **Déploiement :**
    ```bash
+   cd frontend
    npm run deploy
    ```
 
@@ -84,15 +95,6 @@ npm run build
 ```bash
 cd frontend
 npm run start
-```
-
-## Structure du Projet
-
-```
-Prestashop/
-├── frontend/          # Application Next.js
-├── backend/           # API Prestashop
-└── docker-compose.yml # Configuration Docker
 ```
 
 ## Liens Utiles
