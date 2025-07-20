@@ -6,13 +6,34 @@
 Prestashop/
 ├── frontend/          # Application Next.js
 ├── backend/           # API Prestashop
-├── vercel.json        # Configuration Vercel
+├── .github/workflows/ # GitHub Actions
 └── docker-compose.yml # Configuration Docker
 ```
 
 ## Options de Déploiement
 
-### Option 1 : Vercel (Recommandé)
+### Option 1 : GitHub Pages (Recommandé - Plus Simple)
+
+**Avantages :**
+
+- ✅ Gratuit et illimité
+- ✅ Déploiement automatique à chaque push
+- ✅ Configuration simple
+- ✅ Pas besoin de compte externe
+
+**Configuration automatique :**
+
+1. **Le workflow GitHub Actions est déjà configuré**
+2. **Activez GitHub Pages dans les settings de votre repo :**
+
+   - Allez dans Settings > Pages
+   - Source : "GitHub Actions"
+   - Cliquez sur "Save"
+
+3. **Votre site sera accessible à :**
+   `https://tsuna-bot.github.io/carre-sante-beaute/`
+
+### Option 2 : Vercel
 
 1. **Installation de Vercel CLI :**
 
@@ -31,7 +52,7 @@ Prestashop/
    - Le build se fera dans le dossier `frontend/`
    - Le déploiement se fera automatiquement à chaque push sur GitHub
 
-### Option 2 : Netlify
+### Option 3 : Netlify
 
 1. **Build du projet :**
 
@@ -43,26 +64,7 @@ Prestashop/
 2. **Déploiement via Netlify CLI :**
    ```bash
    npm install -g netlify-cli
-   netlify deploy --dir=frontend/.next --prod
-   ```
-
-### Option 3 : GitHub Pages
-
-1. **Configuration dans frontend/package.json :**
-
-   ```json
-   {
-     "scripts": {
-       "export": "next build && next export",
-       "deploy": "npm run export && touch out/.nojekyll"
-     }
-   }
-   ```
-
-2. **Déploiement :**
-   ```bash
-   cd frontend
-   npm run deploy
+   netlify deploy --dir=frontend/out --prod
    ```
 
 ## Variables d'Environnement
@@ -71,7 +73,7 @@ Créez un fichier `.env.local` dans le dossier `frontend` :
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
-NEXT_PUBLIC_SITE_URL=https://votre-domaine.vercel.app
+NEXT_PUBLIC_SITE_URL=https://tsuna-bot.github.io/carre-sante-beaute
 ```
 
 ## Commandes Utiles
@@ -97,8 +99,16 @@ cd frontend
 npm run start
 ```
 
+### Déploiement manuel GitHub Pages
+
+```bash
+cd frontend
+npm run deploy
+```
+
 ## Liens Utiles
 
 - **Repository GitHub :** https://github.com/Tsuna-bot/carre-sante-beaute.git
+- **Site déployé :** https://tsuna-bot.github.io/carre-sante-beaute/
 - **Documentation Next.js :** https://nextjs.org/docs
-- **Documentation Vercel :** https://vercel.com/docs
+- **Documentation GitHub Pages :** https://pages.github.com/
