@@ -151,8 +151,25 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Empêcher le scroll quand le menu est ouvert
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMenuOpen]);
+
   const handleToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
   };
 
   const handleCategoryHover = (categoryName: string) => {
@@ -283,48 +300,137 @@ export default function Header() {
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Burger animé */}
             <button
               onClick={handleToggleMenu}
-              className={`lg:hidden transition-colors duration-300 hover:opacity-60 ${
+              className={`lg:hidden relative w-8 h-8 flex flex-col justify-center items-center transition-all duration-300 ${
                 isScrolled ? "text-black" : "text-white"
               }`}
+              aria-label="Menu mobile"
             >
-              {isMenuOpen ? (
-                <XMarkIcon className="h-6 w-6" />
-              ) : (
-                <Bars3Icon className="h-6 w-6" />
-              )}
+              {/* Ligne 1 */}
+              <span
+                className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ${
+                  isMenuOpen ? "rotate-45 translate-y-0" : "-translate-y-2"
+                }`}
+              />
+              {/* Ligne 2 */}
+              <span
+                className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ${
+                  isMenuOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              {/* Ligne 3 */}
+              <span
+                className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ${
+                  isMenuOpen ? "-rotate-45 translate-y-0" : "translate-y-2"
+                }`}
+              />
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Overlay sombre pour le menu mobile */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-100 py-8">
-            <div className="max-w-full mx-auto px-6">
-              <nav className="grid grid-cols-2 gap-8">
-                {categories.map((category) => (
+          <div
+            className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 animate-[fadeIn_0.3s_ease-out]"
+            onClick={handleCloseMenu}
+          />
+        )}
+
+        {/* Menu Mobile - Slide depuis la droite */}
+        <div
+          className={`lg:hidden fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          {/* Header du menu mobile */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-100">
+            <h2 className="text-xl font-poppins font-light text-black">Menu</h2>
+            <button
+              onClick={handleCloseMenu}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+              aria-label="Fermer le menu"
+            >
+              <XMarkIcon className="h-6 w-6 text-black" />
+            </button>
+          </div>
+
+          {/* Contenu du menu mobile */}
+          <div className="p-6 overflow-y-auto h-full">
+            <nav className="space-y-6">
+              {/* Recherche mobile */}
+              <div className="relative mb-8">
+                <input
+                  type="text"
+                  placeholder="Rechercher un produit..."
+                  className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                />
+                <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              </div>
+
+              {/* Liens principaux */}
+              <div className="space-y-4">
+                {categories.map((category, index) => (
                   <Link
                     key={category.name}
                     href={category.href}
-                    className="text-black font-extralight hover:opacity-60 transition-opacity duration-300 text-lg"
-                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-black font-light hover:text-pink-500 transition-colors duration-200 text-lg py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
+                    style={{
+                      animationDelay: `${index * 50}ms`,
+                    }}
+                    onClick={handleCloseMenu}
                   >
                     {category.name}
                   </Link>
                 ))}
+
                 <Link
                   href="/blog"
-                  className="text-black font-extralight hover:opacity-60 transition-opacity duration-300 text-lg"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-black font-light hover:text-pink-500 transition-colors duration-200 text-lg py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
+                  style={{
+                    animationDelay: `${categories.length * 50}ms`,
+                  }}
+                  onClick={handleCloseMenu}
                 >
                   Blog
                 </Link>
-              </nav>
-            </div>
+              </div>
+
+              {/* Actions mobiles */}
+              <div className="pt-8 border-t border-gray-100 space-y-4">
+                <Link
+                  href="/account"
+                  className="flex items-center space-x-3 text-black font-light hover:text-pink-500 transition-colors duration-200 py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
+                  style={{
+                    animationDelay: `${(categories.length + 1) * 50}ms`,
+                  }}
+                  onClick={handleCloseMenu}
+                >
+                  <UserIcon className="h-5 w-5" />
+                  <span>Mon compte</span>
+                </Link>
+
+                <Link
+                  href="/cart"
+                  className="flex items-center space-x-3 text-black font-light hover:text-pink-500 transition-colors duration-200 py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
+                  style={{
+                    animationDelay: `${(categories.length + 2) * 50}ms`,
+                  }}
+                  onClick={handleCloseMenu}
+                >
+                  <div className="relative">
+                    <ShoppingBagIcon className="h-5 w-5" />
+                    <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-light">
+                      0
+                    </span>
+                  </div>
+                  <span>Panier</span>
+                </Link>
+              </div>
+            </nav>
           </div>
-        )}
+        </div>
       </div>
     </header>
   );
