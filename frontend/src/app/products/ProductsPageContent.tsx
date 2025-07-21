@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { productsApi } from '@/lib/prestashop-api';
+import { mockApi } from '@/lib/mock-data';
 import ProductCard from '@/components/ui/ProductCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
@@ -23,7 +23,7 @@ function ProductsSearchWrapper() {
 
   const { data: products, isLoading, error, refetch } = useQuery({
     queryKey: ['products'],
-    queryFn: () => productsApi.getAll(),
+    queryFn: () => mockApi.products.getAll(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -44,7 +44,7 @@ function ProductsSearchWrapper() {
   if (error) {
     return (
       <ErrorMessage 
-        message="Impossible de charger les produits. Vérifiez que PrestaShop est démarré et que l'API est configurée."
+        message="Impossible de charger les produits."
         onRetry={() => refetch()}
       />
     );

@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import { ArrowLeftIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import PageLayout from "@/components/PageLayout";
+import { mockProducts } from "@/lib/mock-data";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -8,17 +10,27 @@ interface PageProps {
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { id } = await params;
+  
+  // Récupérer le produit à partir des données statiques
+  const product = mockProducts.find(p => p.id === parseInt(id));
 
-  // Simulation d'un produit
-  const product = {
-    id: parseInt(id),
-    name: "Produit de démonstration",
-    price: "29.99",
-    description:
-      "Ceci est un produit de démonstration pour montrer le design de la page produit.",
-    active: true,
-    quantity: 10,
-  };
+  if (!product) {
+    return (
+      <PageLayout>
+        <div className="max-w-7xl mx-auto text-center py-16">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Produit non trouvé
+          </h1>
+          <Link
+            href="/products"
+            className="text-blue-600 hover:text-blue-800"
+          >
+            Retour aux produits
+          </Link>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>
@@ -35,42 +47,86 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Image placeholder */}
+          {/* Image du produit */}
           <div className="space-y-4">
             <div className="aspect-square relative rounded-lg overflow-hidden bg-gray-100">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-gray-500">Image du produit</span>
-              </div>
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
 
           {/* Informations produit */}
           <div className="space-y-6">
             <div>
+              {product.brand && (
+                <p className="text-gray-600 mb-2">{product.brand}</p>
+              )}
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 {product.name}
               </h1>
+              {product.reference && (
+                <p className="text-sm text-gray-500">Réf: {product.reference}</p>
+              )}
             </div>
 
             {/* Prix */}
             <div className="border-t border-b py-4">
               <div className="flex items-center space-x-4">
                 <span className="text-3xl font-bold text-gray-900">
-                  {product.price} €
+                  {parseFloat(product.price).toFixed(2)} €
                 </span>
+                <span className="text-gray-500">TTC</span>
               </div>
             </div>
 
+            {/* Stock */}
+            {product.quantity !== undefined && (
+              <div className="flex items-center space-x-2">
+                {product.quantity > 0 ? (
+                  <>
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-600 text-sm">
+                      En stock ({product.quantity} disponible{product.quantity > 1 ? 's' : ''})
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <span className="text-red-600 text-sm">Rupture de stock</span>
+                  </>
+                )}
+              </div>
+            )}
+
             {/* Description */}
-            <div className="prose prose-sm">
-              <p>{product.description}</p>
+            <div className="prose prose-sm max-w-none">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Description</h3>
+              <p className="text-gray-700 leading-relaxed">{product.description}</p>
+              {product.description_short && (
+                <p className="text-gray-600 text-sm mt-2">{product.description_short}</p>
+              )}
             </div>
 
-            {/* Bouton d'action */}
+            {/* Boutons d'action */}
             <div className="space-y-4">
-              <button className="w-full flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                Voir les détails
-              </button>
+              {product.active && product.quantity && product.quantity > 0 ? (
+                <button className="w-full flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                  <ShoppingCartIcon className="h-5 w-5 mr-2" />
+                  Ajouter au panier
+                </button>
+              ) : (
+                <button 
+                  disabled 
+                  className="w-full flex items-center justify-center px-6 py-3 bg-gray-400 text-white font-medium rounded-lg cursor-not-allowed"
+                >
+                  Produit indisponible
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -80,6 +136,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
 }
 
 export async function generateStaticParams() {
-  // Génère quelques pages de produits statiques
-  return [{ id: "1" }, { id: "2" }, { id: "3" }, { id: "4" }, { id: "5" }];
+  // Génère les pages pour tous les produits dans mock-data
+  return mockProducts.map((product) => ({
+    id: product.id.toString(),
+  }));
 }

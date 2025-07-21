@@ -11,7 +11,6 @@ import {
   ArrowRightIcon 
 } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cart';
-import { getImageUrl } from '@/lib/prestashop-api';
 
 export default function CartPageContent() {
   const { items, total, updateQuantity, removeItem, clearCart } = useCartStore();
@@ -64,7 +63,7 @@ export default function CartPageContent() {
             if (!product) return null;
 
             const itemTotal = parseFloat(item.price) * item.quantity;
-            const imageUrl = getImageUrl(product.id, product.id_default_image);
+            const imageUrl = product.image || '/placeholder-product.jpg';
 
             return (
               <div key={item.id} className="bg-white border rounded-lg p-6">

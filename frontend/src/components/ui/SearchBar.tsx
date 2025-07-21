@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useQuery } from '@tanstack/react-query';
-import { productsApi } from '@/lib/prestashop-api';
+import { mockApi } from '@/lib/mock-data';
 import { Product } from '@/types/prestashop';
 
 export default function SearchBar() {
@@ -16,7 +16,7 @@ export default function SearchBar() {
 
   const { data: searchResults } = useQuery({
     queryKey: ['search', query],
-    queryFn: () => productsApi.search(query),
+    queryFn: () => mockApi.products.search(query),
     enabled: query.length >= 2,
     staleTime: 30000, // 30 secondes
   });

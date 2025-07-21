@@ -1,15 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Désactivé pour garder toutes les fonctionnalités
-  // output: 'export',
-  // trailingSlash: true,
   images: {
     unoptimized: true,
+    domains: ['demo.prestashop.com', 'localhost'],
   },
-  // basePath: process.env.NODE_ENV === 'production' ? '/carre-sante-beaute' : '',
-  // assetPrefix: process.env.NODE_ENV === 'production' ? '/carre-sante-beaute/' : '',
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  experimental: {
+    forceSwcTransforms: true,
   },
 };
 

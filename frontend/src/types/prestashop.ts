@@ -27,6 +27,8 @@ export interface Product {
   active: boolean;
   quantity?: number;
   id_category_default: number;
+  brand?: string;
+  image?: any; // StaticImageData from Next.js ou string pour URL
   categories?: Array<{ id: number }>;
   images?: Array<{ id: number; id_image: number }>;
   features?: Array<{

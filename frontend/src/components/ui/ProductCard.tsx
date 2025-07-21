@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { Product } from '@/types/prestashop';
-import { getImageUrl } from '@/lib/prestashop-api';
 import { useCartStore } from '@/store/cart';
 
 interface ProductCardProps {
@@ -18,7 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     addItem(product);
   };
 
-  const imageUrl = getImageUrl(product.id, product.id_default_image);
+  const imageUrl = product.image || '/placeholder-product.jpg';
   const price = parseFloat(product.price);
 
   return (
