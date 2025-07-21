@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   title: "Carré Santé Beauté - Parapharmacie et Institut de Beauté à Lyon",
   description:
     "Découvrez notre sélection de produits de beauté, soins et cosmétiques. Prenez RDV dans nos instituts pour des soins personnalisés.",
+  viewport:
+    "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
 };
 
 export default function RootLayout({
@@ -29,8 +31,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" className="w-full">
       <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -39,10 +45,14 @@ export default function RootLayout({
           referrerPolicy="no-referrer"
         />
       </head>
-      <body className={`${playfair.variable} ${poppins.variable} font-poppins`}>
-        <SmoothScroll>
-          <QueryProvider>{children}</QueryProvider>
-        </SmoothScroll>
+      <body
+        className={`${playfair.variable} ${poppins.variable} font-poppins w-full overflow-x-hidden`}
+      >
+        <div className="w-full min-h-screen">
+          <SmoothScroll>
+            <QueryProvider>{children}</QueryProvider>
+          </SmoothScroll>
+        </div>
       </body>
     </html>
   );

@@ -6,8 +6,6 @@ import {
   MagnifyingGlassIcon,
   ShoppingBagIcon,
   UserIcon,
-  Bars3Icon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 // Configuration des catégories principales avec sous-catégories
@@ -137,6 +135,59 @@ const categories = [
   },
 ];
 
+// Composant Menu Burger SVG Animé
+const AnimatedBurgerMenu = ({
+  isOpen,
+  color,
+}: {
+  isOpen: boolean;
+  color: string;
+}) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`burger-menu-svg ${isOpen ? "open" : ""}`}
+    >
+      {/* Barre du haut */}
+      <line
+        x1="3"
+        y1="6"
+        x2="21"
+        y2="6"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      {/* Barre du milieu */}
+      <line
+        x1="3"
+        y1="12"
+        x2="21"
+        y2="12"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      {/* Barre du bas */}
+      <line
+        x1="3"
+        y1="18"
+        x2="21"
+        y2="18"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -163,19 +214,21 @@ export default function Header() {
     setHoveredCategory(null);
   };
 
+  const burgerColor = isScrolled ? "#000000" : "#ffffff";
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${
         isScrolled ? "bg-white/95 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <div className="max-w-full mx-auto px-6">
+      <div className="w-full max-w-full mx-auto px-4 sm:px-6">
         {/* Top Bar */}
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <span
-              className={`text-xl font-poppins font-light transition-colors duration-300 ${
+              className={`text-lg sm:text-xl font-poppins font-light transition-colors duration-300 ${
                 isScrolled ? "text-black" : "text-white"
               } group-hover:opacity-80`}
             >
@@ -239,13 +292,13 @@ export default function Header() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-8">
-            {/* Search */}
-            <div className="relative">
+          <div className="flex items-center justify-end gap-4 sm:gap-8">
+            {/* Search - Hidden on mobile */}
+            <div className="hidden sm:block relative">
               <input
                 type="text"
                 placeholder="Rechercher un produit..."
-                className={`w-60 px-10 py-2 rounded-full text-xs transition-all duration-300 focus:outline-none ${
+                className={`w-40 sm:w-60 px-10 py-2 rounded-full text-xs transition-all duration-300 focus:outline-none ${
                   isScrolled
                     ? "bg-gray-100 border border-gray-200 text-black placeholder-gray-500 focus:bg-white focus:border-gray-300"
                     : "bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-white/60 focus:bg-white/20 focus:border-white/40"
@@ -258,10 +311,10 @@ export default function Header() {
               />
             </div>
 
-            {/* Account */}
+            {/* Account - Hidden on mobile */}
             <Link
               href="/account"
-              className={`transition-colors duration-300 hover:opacity-60 ${
+              className={`hidden sm:block transition-colors duration-300 hover:opacity-60 ${
                 isScrolled ? "text-black" : "text-white"
               }`}
             >
@@ -277,50 +330,90 @@ export default function Header() {
                 }`}
               >
                 <ShoppingBagIcon className="h-5 w-5" />
-                <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-light">
+                <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-light">
                   0
                 </span>
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Menu Burger SVG Animé */}
             <button
               onClick={handleToggleMenu}
-              className={`lg:hidden transition-colors duration-300 hover:opacity-60 ${
-                isScrolled ? "text-black" : "text-white"
-              }`}
+              className="lg:hidden flex items-center justify-center w-8 h-8 transition-all duration-300 hover:opacity-60 focus:outline-none burger-button ml-4"
+              aria-label="Menu"
             >
-              {isMenuOpen ? (
-                <XMarkIcon className="h-6 w-6" />
-              ) : (
-                <Bars3Icon className="h-6 w-6" />
-              )}
+              <AnimatedBurgerMenu isOpen={isMenuOpen} color={burgerColor} />
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Full width overlay */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-100 py-8">
-            <div className="max-w-full mx-auto px-6">
-              <nav className="grid grid-cols-2 gap-8">
+          <div className="lg:hidden fixed top-16 sm:top-20 left-0 right-0 w-full h-screen bg-white z-40 overflow-y-auto">
+            <div className="w-full px-4 sm:px-6 py-8">
+              {/* Search Bar for Mobile */}
+              <div className="mb-8">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Rechercher un produit..."
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 text-black placeholder-gray-500 focus:outline-none focus:border-gray-300"
+                  />
+                  <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+
+              {/* Mobile Navigation */}
+              <nav className="space-y-6">
                 {categories.map((category) => (
-                  <Link
+                  <div
                     key={category.name}
-                    href={category.href}
-                    className="text-black font-extralight hover:opacity-60 transition-opacity duration-300 text-lg"
+                    className="border-b border-gray-100 pb-4"
+                  >
+                    <Link
+                      href={category.href}
+                      className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {category.name}
+                    </Link>
+                    {/* Subcategories */}
+                    <div className="mt-3 ml-4 space-y-2">
+                      {category.subcategories.slice(0, 3).map((subcategory) => (
+                        <Link
+                          key={subcategory.name}
+                          href={subcategory.href}
+                          className="text-gray-600 font-light hover:opacity-60 transition-opacity duration-300 text-sm block"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {subcategory.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Blog Link */}
+                <div className="border-b border-gray-100 pb-4">
+                  <Link
+                    href="/blog"
+                    className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {category.name}
+                    Blog
                   </Link>
-                ))}
-                <Link
-                  href="/blog"
-                  className="text-black font-extralight hover:opacity-60 transition-opacity duration-300 text-lg"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Blog
-                </Link>
+                </div>
+
+                {/* Account Link for Mobile */}
+                <div className="pt-4">
+                  <Link
+                    href="/account"
+                    className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Mon Compte
+                  </Link>
+                </div>
               </nav>
             </div>
           </div>
