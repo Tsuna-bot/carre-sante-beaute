@@ -1,13 +1,10 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Category, Product, Cart, Customer, Order } from '@/types/prestashop';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY || '';
 
-if (!API_KEY) {
-  console.warn('⚠️ NEXT_PUBLIC_API_KEY is not set in environment variables');
-}
-
+// Configuration Axios
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -18,51 +15,23 @@ const api = axios.create({
     username: API_KEY,
     password: '',
   },
-  timeout: 10000,
 });
 
-interface ApiError {
-  message: string;
-  status?: number;
-  code?: string;
-}
-
+// Intercepteur pour gestion d'erreurs
 api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error: AxiosError) => {
-    const apiError: ApiError = {
-      message: 'Une erreur est survenue',
-      status: error.response?.status,
-      code: error.code,
-    };
-
-    if (error.response?.data) {
-      apiError.message = typeof error.response.data === 'string' 
-        ? error.response.data 
-        : 'Erreur de l\'API';
-    } else if (error.message) {
-      apiError.message = error.message;
-    }
-
-    console.error('API Error:', apiError);
-    return Promise.reject(apiError);
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
   }
 );
 
-function extractData<T>(response: unknown): T | T[] {
-  if (!response || typeof response !== 'object') {
-    throw new Error('Invalid API response format');
-  }
-
-  const responseObj = response as Record<string, unknown>;
-  const keys = Object.keys(responseObj);
+// Helper pour extraire les données de l'API PrestaShop
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractData<T>(response: any): T | T[] {
+  const keys = Object.keys(response);
   const dataKey = keys.find(key => key !== 'prestashop');
-  
-  if (!dataKey) {
-    throw new Error('No valid data key found in API response');
-  }
-
-  return responseObj[dataKey] as T | T[];
+  return dataKey ? response[dataKey] : response;
 }
 
 // API Catégories
@@ -87,12 +56,13 @@ export const categoriesApi = {
 // API Produits
 export const productsApi = {
   getAll: async (limit?: number, offset?: number): Promise<Product[]> => {
-    const params: Record<string, number> = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const params: any = {};
     if (limit) params.limit = limit;
     if (offset) params.offset = offset;
     
     const response = await api.get('/products', { params });
-    const data = extractData<Product>(response.data);
+    const data = extractData<Product>(response.data) as Product[];
     return Array.isArray(data) ? data : [data];
   },
 

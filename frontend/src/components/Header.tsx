@@ -6,8 +6,6 @@ import {
   MagnifyingGlassIcon,
   ShoppingBagIcon,
   UserIcon,
-  Bars3Icon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 // Configuration des catégories principales avec sous-catégories
@@ -137,6 +135,59 @@ const categories = [
   },
 ];
 
+// Composant Menu Burger SVG Animé
+const AnimatedBurgerMenu = ({
+  isOpen,
+  color,
+}: {
+  isOpen: boolean;
+  color: string;
+}) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`burger-menu-svg ${isOpen ? "open" : ""}`}
+    >
+      {/* Barre du haut */}
+      <line
+        x1="3"
+        y1="6"
+        x2="21"
+        y2="6"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      {/* Barre du milieu */}
+      <line
+        x1="3"
+        y1="12"
+        x2="21"
+        y2="12"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      {/* Barre du bas */}
+      <line
+        x1="3"
+        y1="18"
+        x2="21"
+        y2="18"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -151,25 +202,8 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Empêcher le scroll quand le menu est ouvert
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isMenuOpen]);
-
   const handleToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleCloseMenu = () => {
-    setIsMenuOpen(false);
   };
 
   const handleCategoryHover = (categoryName: string) => {
@@ -180,19 +214,21 @@ export default function Header() {
     setHoveredCategory(null);
   };
 
+  const burgerColor = isScrolled ? "#000000" : "#ffffff";
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ${
         isScrolled ? "bg-white/95 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <div className="max-w-full mx-auto px-6">
+      <div className="w-full max-w-full mx-auto px-4 sm:px-6">
         {/* Top Bar */}
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <span
-              className={`text-xl font-poppins font-light transition-colors duration-300 ${
+              className={`text-lg sm:text-xl font-poppins font-light transition-colors duration-300 ${
                 isScrolled ? "text-black" : "text-white"
               } group-hover:opacity-80`}
             >
@@ -256,13 +292,13 @@ export default function Header() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-8">
-            {/* Search */}
-            <div className="relative">
+          <div className="flex items-center justify-end gap-4 sm:gap-8">
+            {/* Search - Hidden on mobile */}
+            <div className="hidden sm:block relative">
               <input
                 type="text"
                 placeholder="Rechercher un produit..."
-                className={`w-60 px-10 py-2 rounded-full text-xs transition-all duration-300 focus:outline-none ${
+                className={`w-40 sm:w-60 px-10 py-2 rounded-full text-xs transition-all duration-300 focus:outline-none ${
                   isScrolled
                     ? "bg-gray-100 border border-gray-200 text-black placeholder-gray-500 focus:bg-white focus:border-gray-300"
                     : "bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-white/60 focus:bg-white/20 focus:border-white/40"
@@ -275,10 +311,10 @@ export default function Header() {
               />
             </div>
 
-            {/* Account */}
+            {/* Account - Hidden on mobile */}
             <Link
               href="/account"
-              className={`transition-colors duration-300 hover:opacity-60 ${
+              className={`hidden sm:block transition-colors duration-300 hover:opacity-60 ${
                 isScrolled ? "text-black" : "text-white"
               }`}
             >
@@ -294,143 +330,94 @@ export default function Header() {
                 }`}
               >
                 <ShoppingBagIcon className="h-5 w-5" />
-                <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-light">
+                <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-light">
                   0
                 </span>
               </Link>
             </div>
 
-            {/* Mobile Menu Button - Burger animé */}
+            {/* Mobile Menu Button - Menu Burger SVG Animé */}
             <button
               onClick={handleToggleMenu}
-              className={`lg:hidden relative w-8 h-8 flex flex-col justify-center items-center transition-all duration-300 ${
-                isScrolled ? "text-black" : "text-white"
-              }`}
-              aria-label="Menu mobile"
+              className="lg:hidden flex items-center justify-center w-8 h-8 transition-all duration-300 hover:opacity-60 focus:outline-none burger-button ml-4"
+              aria-label="Menu"
             >
-              {/* Ligne 1 */}
-              <span
-                className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ${
-                  isMenuOpen ? "rotate-45 translate-y-0" : "-translate-y-2"
-                }`}
-              />
-              {/* Ligne 2 */}
-              <span
-                className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ${
-                  isMenuOpen ? "opacity-0" : "opacity-100"
-                }`}
-              />
-              {/* Ligne 3 */}
-              <span
-                className={`absolute w-6 h-0.5 bg-current transform transition-all duration-300 ${
-                  isMenuOpen ? "-rotate-45 translate-y-0" : "translate-y-2"
-                }`}
-              />
+              <AnimatedBurgerMenu isOpen={isMenuOpen} color={burgerColor} />
             </button>
           </div>
         </div>
 
-        {/* Overlay sombre pour le menu mobile */}
+        {/* Mobile Menu - Full width overlay */}
         {isMenuOpen && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 animate-[fadeIn_0.3s_ease-out]"
-            onClick={handleCloseMenu}
-          />
-        )}
-
-        {/* Menu Mobile - Slide depuis la droite */}
-        <div
-          className={`lg:hidden fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
-            isMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          {/* Header du menu mobile */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-100">
-            <h2 className="text-xl font-poppins font-light text-black">Menu</h2>
-            <button
-              onClick={handleCloseMenu}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-              aria-label="Fermer le menu"
-            >
-              <XMarkIcon className="h-6 w-6 text-black" />
-            </button>
-          </div>
-
-          {/* Contenu du menu mobile */}
-          <div className="p-6 overflow-y-auto h-full">
-            <nav className="space-y-6">
-              {/* Recherche mobile */}
-              <div className="relative mb-8">
-                <input
-                  type="text"
-                  placeholder="Rechercher un produit..."
-                  className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-                />
-                <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <div className="lg:hidden fixed top-16 sm:top-20 left-0 right-0 w-full h-screen bg-white z-40 overflow-y-auto">
+            <div className="w-full px-4 sm:px-6 py-8">
+              {/* Search Bar for Mobile */}
+              <div className="mb-8">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Rechercher un produit..."
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 text-black placeholder-gray-500 focus:outline-none focus:border-gray-300"
+                  />
+                  <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                </div>
               </div>
 
-              {/* Liens principaux */}
-              <div className="space-y-4">
-                {categories.map((category, index) => (
-                  <Link
+              {/* Mobile Navigation */}
+              <nav className="space-y-6">
+                {categories.map((category) => (
+                  <div
                     key={category.name}
-                    href={category.href}
-                    className="block text-black font-light hover:text-pink-500 transition-colors duration-200 text-lg py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                    }}
-                    onClick={handleCloseMenu}
+                    className="border-b border-gray-100 pb-4"
                   >
-                    {category.name}
-                  </Link>
+                    <Link
+                      href={category.href}
+                      className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {category.name}
+                    </Link>
+                    {/* Subcategories */}
+                    <div className="mt-3 ml-4 space-y-2">
+                      {category.subcategories.slice(0, 3).map((subcategory) => (
+                        <Link
+                          key={subcategory.name}
+                          href={subcategory.href}
+                          className="text-gray-600 font-light hover:opacity-60 transition-opacity duration-300 text-sm block"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {subcategory.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 ))}
 
-                <Link
-                  href="/blog"
-                  className="block text-black font-light hover:text-pink-500 transition-colors duration-200 text-lg py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
-                  style={{
-                    animationDelay: `${categories.length * 50}ms`,
-                  }}
-                  onClick={handleCloseMenu}
-                >
-                  Blog
-                </Link>
-              </div>
+                {/* Blog Link */}
+                <div className="border-b border-gray-100 pb-4">
+                  <Link
+                    href="/blog"
+                    className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Blog
+                  </Link>
+                </div>
 
-              {/* Actions mobiles */}
-              <div className="pt-8 border-t border-gray-100 space-y-4">
-                <Link
-                  href="/account"
-                  className="flex items-center space-x-3 text-black font-light hover:text-pink-500 transition-colors duration-200 py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
-                  style={{
-                    animationDelay: `${(categories.length + 1) * 50}ms`,
-                  }}
-                  onClick={handleCloseMenu}
-                >
-                  <UserIcon className="h-5 w-5" />
-                  <span>Mon compte</span>
-                </Link>
-
-                <Link
-                  href="/cart"
-                  className="flex items-center space-x-3 text-black font-light hover:text-pink-500 transition-colors duration-200 py-2 opacity-0 animate-[slideInRight_0.4s_ease-out_forwards]"
-                  style={{
-                    animationDelay: `${(categories.length + 2) * 50}ms`,
-                  }}
-                  onClick={handleCloseMenu}
-                >
-                  <div className="relative">
-                    <ShoppingBagIcon className="h-5 w-5" />
-                    <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-light">
-                      0
-                    </span>
-                  </div>
-                  <span>Panier</span>
-                </Link>
-              </div>
-            </nav>
+                {/* Account Link for Mobile */}
+                <div className="pt-4">
+                  <Link
+                    href="/account"
+                    className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Mon Compte
+                  </Link>
+                </div>
+              </nav>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </header>
   );

@@ -21,10 +21,28 @@
   }
 }
 
+/* Reset et centrage global */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+  /* Garantir que le body prend toute la largeur sur mobile */
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* Classes utilitaires pour les polices */
@@ -34,6 +52,132 @@ body {
 
 .font-poppins {
   font-family: var(--font-poppins);
+}
+
+/* Styles pour mobile - garantir 100vw et centrage */
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Garantir que tous les conteneurs prennent 100vw sur mobile */
+  .w-full,
+  .max-w-full {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Optimiser le header pour mobile */
+  header {
+    width: 100% !important;
+    max-width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  /* Améliorer la visibilité du menu burger */
+  .lg\\:hidden {
+    display: flex !important;
+  }
+
+  /* Garantir que le menu mobile prend toute la largeur */
+  .lg\\:hidden.fixed {
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  /* Centrer tous les conteneurs */
+  .container,
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-5xl,
+  .max-w-4xl,
+  .max-w-3xl,
+  .max-w-2xl,
+  .max-w-xl,
+  .max-w-lg,
+  .max-w-md,
+  .max-w-sm {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* Styles pour le menu burger SVG animé */
+.burger-menu-svg {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.burger-menu-svg line {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 12px 12px;
+}
+
+/* Animation pour la barre du haut */
+.burger-menu-svg line:first-child {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.15s;
+}
+
+.burger-menu-svg.open line:first-child {
+  transform: rotate(45deg) translateY(6px);
+  transition-delay: 0s;
+}
+
+/* Animation pour la barre du milieu */
+.burger-menu-svg line:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0s;
+}
+
+.burger-menu-svg.open line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+  transition-delay: 0s;
+}
+
+/* Animation pour la barre du bas */
+.burger-menu-svg line:last-child {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.15s;
+}
+
+.burger-menu-svg.open line:last-child {
+  transform: rotate(-45deg) translateY(-6px);
+  transition-delay: 0s;
+}
+
+/* Animation inverse pour la fermeture */
+.burger-menu-svg:not(.open) line:first-child {
+  transition-delay: 0.15s;
+}
+
+.burger-menu-svg:not(.open) line:nth-child(2) {
+  transition-delay: 0.3s;
+}
+
+.burger-menu-svg:not(.open) line:last-child {
+  transition-delay: 0.15s;
+}
+
+/* Hover effect pour le bouton burger */
+.burger-button:hover .burger-menu-svg {
+  transform: scale(1.1);
+}
+
+/* Focus styles pour l'accessibilité */
+.burger-button:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Styles personnalisés pour le carrousel Swiper */
@@ -262,33 +406,101 @@ body {
   animation: fade-in-up 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Animations pour le menu burger mobile */
-@keyframes fadeIn {
+/* Styles spécifiques pour le menu burger mobile */
+.mobile-menu-button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Animation pour le menu mobile */
+@keyframes slideInFromTop {
   from {
     opacity: 0;
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
+.mobile-menu-enter {
+  animation: slideInFromTop 0.3s ease-out forwards;
+}
+
+/* Garantir que le contenu principal ne déborde pas sur mobile */
+main {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Optimiser les images pour mobile */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Améliorer la lisibilité sur mobile */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+    line-height: 1.5;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+
+  /* Garantir que tous les conteneurs respectent la largeur mobile et sont centrés */
+  .container,
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-5xl,
+  .max-w-4xl,
+  .max-w-3xl,
+  .max-w-2xl,
+  .max-w-xl,
+  .max-w-lg,
+  .max-w-md,
+  .max-w-sm {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Centrer tous les éléments */
+  .mx-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Garantir que les sections prennent toute la largeur */
+  section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 }
 
-/* Animation pour l'overlay du menu mobile */
-.animate-\[fadeIn_0\.3s_ease-out\] {
-  animation: fadeIn 0.3s ease-out;
-}
-
-/* Animation pour les liens du menu mobile */
-.animate-\[slideInRight_0\.4s_ease-out_forwards\] {
-  animation: slideInRight 0.4s ease-out forwards;
+/* Correction spécifique pour le centrage global */
+#__next,
+.next-app {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
 }

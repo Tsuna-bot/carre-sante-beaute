@@ -9,19 +9,16 @@ export const useCartStore = create<CartStore>()(
       total: 0,
 
       addItem: (product: Product, quantity = 1) => {
-        if (!product || !product.id || quantity <= 0) {
-          console.warn('Invalid product or quantity provided to addItem');
-          return;
-        }
-
         const { items } = get();
         const existingItem = items.find(item => item.id_product === product.id);
 
         if (existingItem) {
+          // Mettre à jour la quantité si le produit existe déjà
           get().updateQuantity(product.id, existingItem.quantity + quantity);
         } else {
+          // Ajouter un nouveau produit
           const newItem: CartItem = {
-            id: Date.now(),
+            id: Date.now(), // ID temporaire
             id_product: product.id,
             quantity,
             price: product.price,
@@ -81,13 +78,9 @@ export const useCartStore = create<CartStore>()(
   )
 );
 
+// Fonction utilitaire pour calculer le total
 function calculateTotal(items: CartItem[]): number {
   return items.reduce((total, item) => {
-    const price = parseFloat(item.price);
-    if (isNaN(price) || item.quantity < 0) {
-      console.warn(`Invalid price or quantity for item ${item.id_product}`);
-      return total;
-    }
-    return total + (price * item.quantity);
+    return total + (parseFloat(item.price) * item.quantity);
   }, 0);
 }
