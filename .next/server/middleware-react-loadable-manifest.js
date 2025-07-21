@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST='{"components/Layout.tsx -> ./CartIcon":{"id":3751,"files":["static/chunks/751.d9b03ebd143422cd.js"]}}';
