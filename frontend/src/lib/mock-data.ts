@@ -210,51 +210,66 @@ export const mockBlogPosts = [
     id: 1,
     slug: "routine-soins",
     title: "Ma routine de soins quotidienne",
-    content: "Découvrez les étapes essentielles d'une routine de soins efficace pour préserver la beauté de votre peau.",
+    content: "<p>Découvrez les étapes essentielles d'une routine de soins efficace pour préserver la beauté de votre peau.</p><p>Une routine bien structurée est la clé d'une peau éclatante et en bonne santé.</p>",
     excerpt: "Les secrets d'une routine beauté réussie",
     date: "2024-01-15",
     category: "Conseils",
-    image: product1Image
+    image: product1Image,
+    author: "Marie Durand",
+    authorRole: "Experte beauté",
+    readTime: "5 min"
   },
   {
     id: 2,
     slug: "tendances-2024",
     title: "Les tendances beauté 2024",
-    content: "Explorez les dernières tendances en matière de beauté et de soins pour cette année.",
+    content: "<p>Explorez les dernières tendances en matière de beauté et de soins pour cette année.</p><p>Découvrez ce qui va définir la beauté en 2024.</p>",
     excerpt: "Ce qui va marquer l'année 2024",
     date: "2024-01-10",
     category: "Tendances",
-    image: product2Image
+    image: product2Image,
+    author: "Sophie Martin",
+    authorRole: "Consultante tendances",
+    readTime: "4 min"
   },
   {
     id: 3,
     slug: "vitamine-c-peau",
     title: "Les bienfaits de la vitamine C pour la peau",
-    content: "Tout ce qu'il faut savoir sur les bienfaits de la vitamine C dans vos soins du visage.",
+    content: "<p>Tout ce qu'il faut savoir sur les bienfaits de la vitamine C dans vos soins du visage.</p><p>La vitamine C est un allié précieux pour l'éclat de votre teint.</p>",
     excerpt: "Un actif incontournable pour votre peau",
     date: "2024-01-05",
     category: "Actifs",
-    image: product3Image
+    image: product3Image,
+    author: "Dr. Laurent Petit",
+    authorRole: "Dermatologue",
+    readTime: "6 min"
   },
   {
     id: 4,
     slug: "conseils-beaute",
     title: "5 conseils beauté d'experts",
-    content: "Nos experts partagent leurs conseils essentiels pour sublimer votre beauté naturelle.",
+    content: "<p>Nos experts partagent leurs conseils essentiels pour sublimer votre beauté naturelle.</p><p>Des astuces professionnelles à portée de main.</p>",
     excerpt: "Les secrets des professionnels",
     date: "2024-01-01",
     category: "Conseils",
-    image: product4Image
+    image: product4Image,
+    author: "Équipe CSB",
+    authorRole: "Experts beauté",
+    readTime: "3 min"
   },
   {
     id: 5,
     slug: "produits-naturels",
     title: "Pourquoi choisir des produits naturels ?",
-    content: "Découvrez les avantages des cosmétiques naturels pour votre peau et l'environnement.",
+    content: "<p>Découvrez les avantages des cosmétiques naturels pour votre peau et l'environnement.</p><p>Un choix responsable pour votre bien-être et la planète.</p>",
     excerpt: "Une beauté plus respectueuse",
     date: "2023-12-20",
     category: "Bio & Naturel",
-    image: product5Image
+    image: product5Image,
+    author: "Camille Verde",
+    authorRole: "Spécialiste bio",
+    readTime: "5 min"
   }
 ];
 

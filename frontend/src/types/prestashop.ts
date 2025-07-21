@@ -1,4 +1,4 @@
-// Types pour l'API PrestaShop
+import { StaticImageData } from 'next/image';
 
 export interface Category {
   id: number;
@@ -15,6 +15,16 @@ export interface Category {
   };
 }
 
+export interface ProductImage {
+  id: number;
+  id_image: number;
+}
+
+export interface ProductFeature {
+  id: number;
+  id_feature_value: number;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -28,20 +38,14 @@ export interface Product {
   quantity?: number;
   id_category_default: number;
   brand?: string;
-  image?: any; // StaticImageData from Next.js ou string pour URL
+  image?: StaticImageData | string;
   categories?: Array<{ id: number }>;
-  images?: Array<{ id: number; id_image: number }>;
-  features?: Array<{
-    id: number;
-    id_feature_value: number;
-  }>;
+  images?: ProductImage[];
+  features?: ProductFeature[];
   associations?: {
     categories?: Array<{ id: number }>;
-    images?: Array<{ id: number }>;
-    product_features?: Array<{
-      id: number;
-      id_feature_value: number;
-    }>;
+    images?: ProductImage[];
+    product_features?: ProductFeature[];
   };
 }
 
@@ -75,6 +79,15 @@ export interface Customer {
   active?: boolean;
 }
 
+export interface OrderRow {
+  id: number;
+  product_id: number;
+  product_attribute_id: number;
+  product_quantity: number;
+  product_price: string;
+  product_name: string;
+}
+
 export interface Order {
   id?: number;
   id_customer: number;
@@ -88,14 +101,7 @@ export interface Order {
   total_paid_tax_excl: string;
   current_state: number;
   associations?: {
-    order_rows?: Array<{
-      id: number;
-      product_id: number;
-      product_attribute_id: number;
-      product_quantity: number;
-      product_price: string;
-      product_name: string;
-    }>;
+    order_rows?: OrderRow[];
   };
 }
 

@@ -3,22 +3,41 @@ import Image from 'next/image';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { Product } from '@/types/prestashop';
 import { useCartStore } from '@/store/cart';
+import { useCallback } from 'react';
 
 interface ProductCardProps {
   product: Product;
 }
 
+const formatPrice = (price: string): string => {
+  const numericPrice = parseFloat(price);
+  return isNaN(numericPrice) ? '0.00' : numericPrice.toFixed(2);
+};
+
+const stripHtmlTags = (html: string): string => {
+  return html.replace(/<[^>]*>/g, '');
+};
+
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>): void => {
+  const target = e.target as HTMLImageElement;
+  target.src = '/placeholder-product.jpg';
+};
+
 export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore(state => state.addItem);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product);
-  };
+  }, [addItem, product]);
 
-  const imageUrl = product.image || '/placeholder-product.jpg';
-  const price = parseFloat(product.price);
+  const imageUrl = product.image && typeof product.image === 'object' && 'src' in product.image 
+    ? product.image.src 
+    : typeof product.image === 'string' 
+    ? product.image 
+    : '/placeholder-product.jpg';
+  const formattedPrice = formatPrice(product.price);
 
   return (
     <Link href={`/products/${product.id}`}>
@@ -30,10 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = '/placeholder-product.jpg';
-            }}
+            onError={handleImageError}
           />
           {!product.active && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -50,7 +66,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           
           {product.description_short && (
             <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-              {product.description_short.replace(/<[^>]*>/g, '')}
+              {stripHtmlTags(product.description_short)}
             </p>
           )}
 
@@ -58,7 +74,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-lg font-bold text-gray-900">
-                {price.toFixed(2)} €
+                {formattedPrice} €
               </span>
               {product.reference && (
                 <span className="text-xs text-gray-500">

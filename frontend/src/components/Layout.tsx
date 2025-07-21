@@ -11,7 +11,6 @@ import {
   HeartIcon,
   UserIcon,
   CalendarIcon,
-  PhoneIcon,
 } from "@heroicons/react/24/outline";
 import SearchBar from "@/components/ui/SearchBar";
 
