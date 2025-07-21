@@ -350,25 +350,33 @@ export default function Header() {
         {/* Mobile Menu - Full width overlay */}
         {isMenuOpen && (
           <div className="lg:hidden fixed top-16 sm:top-20 left-0 right-0 w-full h-screen bg-white z-40 overflow-y-auto">
-            <div className="w-full px-4 sm:px-6 py-8">
+            <div className="w-full px-6 sm:px-8 py-12 pb-32">
               {/* Search Bar for Mobile */}
-              <div className="mb-8">
+              <div className="mb-12">
+                <Link
+                  href="/account"
+                  className="w-full bg-black text-white py-4 px-4 font-medium text-sm cursor-pointer flex items-center justify-center mb-8"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <UserIcon className="h-5 w-5 mr-2" />
+                  <span>Mon compte</span>
+                </Link>
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Rechercher un produit..."
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 text-black placeholder-gray-500 focus:outline-none focus:border-gray-300"
+                    className="w-full px-4 py-3 rounded-full border border-gray-200 text-black placeholder-gray-500 focus:outline-none focus:border-gray-300"
                   />
                   <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
               </div>
 
               {/* Mobile Navigation */}
-              <nav className="space-y-6">
+              <nav className="space-y-8">
                 {categories.map((category) => (
                   <div
                     key={category.name}
-                    className="border-b border-gray-100 pb-4"
+                    className="border-b border-gray-100 pb-6"
                   >
                     <Link
                       href={category.href}
@@ -378,7 +386,7 @@ export default function Header() {
                       {category.name}
                     </Link>
                     {/* Subcategories */}
-                    <div className="mt-3 ml-4 space-y-2">
+                    <div className="mt-4 ml-4 space-y-3">
                       {category.subcategories.slice(0, 3).map((subcategory) => (
                         <Link
                           key={subcategory.name}
@@ -394,24 +402,13 @@ export default function Header() {
                 ))}
 
                 {/* Blog Link */}
-                <div className="border-b border-gray-100 pb-4">
+                <div className="border-b border-gray-100 pb-6">
                   <Link
                     href="/blog"
                     className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Blog
-                  </Link>
-                </div>
-
-                {/* Account Link for Mobile */}
-                <div className="pt-4">
-                  <Link
-                    href="/account"
-                    className="text-black font-medium hover:opacity-60 transition-opacity duration-300 text-lg block"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Mon Compte
                   </Link>
                 </div>
               </nav>

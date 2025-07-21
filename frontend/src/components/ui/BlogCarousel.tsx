@@ -101,6 +101,7 @@ const blogPosts = [
 
 export default function BlogCarousel() {
   const swiperRef = useRef<SwiperRef>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   const handlePrev = () => {
     if (swiperRef.current && swiperRef.current.swiper) {
@@ -111,6 +112,13 @@ export default function BlogCarousel() {
   const handleNext = () => {
     if (swiperRef.current && swiperRef.current.swiper) {
       swiperRef.current.swiper.slideNext();
+    }
+  };
+
+  const handleSlideChange = (swiper: any) => {
+    if (progressBarRef.current) {
+      const progress = ((swiper.activeIndex + 1) / blogPosts.length) * 100;
+      progressBarRef.current.style.width = `${progress}%`;
     }
   };
 
@@ -130,8 +138,8 @@ export default function BlogCarousel() {
           </p>
         </div>
 
-        {/* Carousel Container */}
-        <div className="relative">
+        {/* Version Desktop */}
+        <div className="hidden sm:block">
           {/* Navigation Buttons - En haut */}
           <div className="flex justify-end mb-8 px-6">
             <div className="flex space-x-4">
@@ -246,6 +254,89 @@ export default function BlogCarousel() {
               </SwiperSlide>
             ))}
           </Swiper>
+        </div>
+
+        {/* Version Mobile - Layout vertical avec image en haut */}
+        <div className="sm:hidden px-16 -mx-16">
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={16}
+            slidesPerView={1}
+            navigation={false}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            className="blog-carousel"
+            onSlideChange={handleSlideChange}
+          >
+            {blogPosts.map((post) => (
+              <SwiperSlide key={post.id}>
+                <Link href={`/blog/${post.slug}`} className="block">
+                  <div className="group bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 overflow-hidden">
+                    {/* Image en haut */}
+                    <div className="w-full h-48 relative overflow-hidden bg-gray-100 flex-shrink-0">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-gray-500 text-sm">
+                          Image à venir
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Contenu en bas */}
+                    <div className="p-4 flex flex-col justify-between">
+                      <div>
+                        <span className="text-xs font-light text-gray-500 tracking-widest uppercase mb-2 block">
+                          {post.category}
+                        </span>
+                        <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors mb-2 line-clamp-2 text-sm leading-tight">
+                          {post.title}
+                        </h3>
+                        <p className="text-xs text-gray-600 line-clamp-3 mb-3 leading-relaxed">
+                          {post.excerpt}
+                        </p>
+                      </div>
+
+                      {/* Métadonnées */}
+                      <div className="flex flex-col">
+                        <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                          <div className="flex items-center">
+                            <CalendarIcon className="w-3 h-3 mr-1" />
+                            {post.date}
+                          </div>
+                          <div className="flex items-center">
+                            <ClockIcon className="w-3 h-3 mr-1" />
+                            {post.readTime}
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-400 font-light">
+                          Par {post.author}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Bouton lire l'article en dessous */}
+                    <div className="p-4 pt-0">
+                      <button className="w-full bg-black text-white py-4 px-4 font-medium text-sm cursor-pointer">
+                        Lire l'article
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          {/* Indicateur de navigation mobile */}
+          <div className="flex justify-center items-center mt-6">
+            <div className="w-48 h-1 bg-gray-200 rounded-full">
+              <div
+                ref={progressBarRef}
+                className="mobile-progress-bar h-full bg-gray-400 rounded-full transition-all duration-300"
+                style={{ width: `${(1 / blogPosts.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
         </div>
 
         {/* CTA Section */}

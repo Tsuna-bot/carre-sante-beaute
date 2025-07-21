@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
@@ -200,7 +202,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-16">
             {/* Services grid - Optimisé pour mobile */}
             {[
               "ÉPILATIONS",
@@ -220,7 +222,8 @@ export default function Home() {
               "SOINS DU MOIS",
             ].map((service, index) => (
               <div key={index} className="text-center group">
-                <div className="bg-gray-100 rounded-lg p-3 sm:p-4 mb-3 group-hover:bg-gray-200 transition-all duration-300 delay-0 ease-out cursor-pointer group-hover:pb-16 relative overflow-hidden">
+                {/* Version Desktop - Hover effect */}
+                <div className="hidden sm:block bg-gray-100 rounded-lg p-3 sm:p-4 mb-3 group-hover:bg-gray-200 transition-all duration-300 delay-0 ease-out cursor-pointer group-hover:pb-16 relative overflow-hidden">
                   <h3 className="text-xs sm:text-sm font-playfair font-light text-black">
                     {service}
                   </h3>
@@ -255,6 +258,47 @@ export default function Home() {
                         />
                       </svg>
                     </button>
+                  </div>
+                </div>
+
+                {/* Version Mobile - Boutons cliquables avec effet d'allongement */}
+                <div className="sm:hidden bg-gray-100 rounded-lg p-4 mb-3 relative">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-playfair font-light text-black">
+                      {service}
+                    </h3>
+                    <div className="flex space-x-3">
+                      <button className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center transition-colors cursor-pointer">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                          />
+                        </svg>
+                      </button>
+                      <button className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center transition-colors cursor-pointer">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
